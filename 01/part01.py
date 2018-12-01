@@ -1,0 +1,1 @@
+with open("input.txt") as f: lines = f.readlines(); print(sum([int(n) for n in lines]))
