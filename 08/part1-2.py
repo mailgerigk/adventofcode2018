@@ -30,13 +30,11 @@ print(sum_part2(root))
 '''
     # golf version
     from functools import reduce
-    from collections import namedtuple
-    Node = namedtuple("Node", "children metadata")
     def parse_node(data):
         child_count, metadata_count, *data = data
         children, data = reduce(lambda a,b:(a[0]+[parse_node(a[1])[0]],parse_node(a[1])[1]),range(child_count),([],data))
-        return Node(children, data[:metadata_count]), data[metadata_count:]
+        return (children, data[:metadata_count]), data[metadata_count:]
     root, _ = parse_node(list(map(int, open("input.txt").readlines()[0].split())))
-    print((lambda a:lambda v:a(a,v))(lambda rec,node: sum(node.metadata) + sum([rec(rec,child) for child in node.children]))(root))
-    print((lambda a:lambda v:a(a,v))(lambda rec,node: sum([rec(rec, node.children[idx - 1]) for idx in node.metadata if idx and idx <= len(node.children)]) if node.children else sum(node.metadata))(root))
+    print((lambda a:lambda v:a(a,v))(lambda rec,node: sum(node[1]) + sum([rec(rec,child) for child in node[0]]))(root))
+    print((lambda a:lambda v:a(a,v))(lambda rec,node: sum([rec(rec, node[0][idx - 1]) for idx in node[1] if idx and idx <= len(node[0])]) if node[0] else sum(node[1]))(root))
 '''
