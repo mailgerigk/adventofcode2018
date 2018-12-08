@@ -1,4 +1,4 @@
-# the alternative solution saves 2 line!
+# the alternative solution saves 3 line!
 '''
 def parse_node(data):
     child_count, metadata_count, *data = data
@@ -10,16 +10,15 @@ def parse_node(data):
     return Node(children, metadata), data[metadata_count:]
 '''
 
+from functools import reduce
 from collections import namedtuple
 
 Node = namedtuple("Node", "children metadata")
 
 def parse_node(data):
     child_count, metadata_count, *data = data
-    from functools import reduce
     children, data = reduce(lambda a,b:(a[0]+[parse_node(a[1])[0]],parse_node(a[1])[1]),range(child_count),([],data))
-    metadata = data[:metadata_count]
-    return Node(children, metadata), data[metadata_count:]
+    return Node(children, data[:metadata_count]), data[metadata_count:]
 
 def sum_part1(node):
     return sum(node.metadata) + sum([sum_part1(child) for child in node.children])
