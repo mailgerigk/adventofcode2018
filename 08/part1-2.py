@@ -26,15 +26,3 @@ root, _ = parse_node(data)
 
 print(sum_part1(root))
 print(sum_part2(root))
-
-'''
-    # golf version
-    from functools import reduce
-    def parse_node(data):
-        child_count, metadata_count, *data = data
-        children, data = reduce(lambda a,b:(a[0]+[parse_node(a[1])[0]],parse_node(a[1])[1]),range(child_count),([],data))
-        return (children, data[:metadata_count]), data[metadata_count:]
-    root, _ = parse_node(list(map(int, open("input.txt").readlines()[0].split())))
-    print((lambda a:lambda v:a(a,v))(lambda rec,node: sum(node[1]) + sum([rec(rec,child) for child in node[0]]))(root))
-    print((lambda a:lambda v:a(a,v))(lambda rec,node: sum([rec(rec, node[0][idx - 1]) for idx in node[1] if idx and idx <= len(node[0])]) if node[0] else sum(node[1]))(root))
-'''

@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="golf.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="part1-2.py" />
   </ItemGroup>
   <ItemGroup>
