@@ -1,5 +1,8 @@
-# the alternative solution saves 3 line!
-'''
+from functools import reduce
+from collections import namedtuple
+
+Node = namedtuple("Node", "children metadata")
+
 def parse_node(data):
     child_count, metadata_count, *data = data
     children = []
@@ -8,17 +11,6 @@ def parse_node(data):
         children += [child]
     metadata = data[:metadata_count]
     return Node(children, metadata), data[metadata_count:]
-'''
-
-from functools import reduce
-from collections import namedtuple
-
-Node = namedtuple("Node", "children metadata")
-
-def parse_node(data):
-    child_count, metadata_count, *data = data
-    children, data = reduce(lambda a,b:(a[0]+[parse_node(a[1])[0]],parse_node(a[1])[1]),range(child_count),([],data))
-    return Node(children, data[:metadata_count]), data[metadata_count:]
 
 def sum_part1(node):
     return sum(node.metadata) + sum([sum_part1(child) for child in node.children])
@@ -34,3 +26,17 @@ root, _ = parse_node(data)
 
 print(sum_part1(root))
 print(sum_part2(root))
+
+'''
+    # golf version
+    from functools import reduce
+    from collections import namedtuple
+    Node = namedtuple("Node", "children metadata")
+    def parse_node(data):
+        child_count, metadata_count, *data = data
+        children, data = reduce(lambda a,b:(a[0]+[parse_node(a[1])[0]],parse_node(a[1])[1]),range(child_count),([],data))
+        return Node(children, data[:metadata_count]), data[metadata_count:]
+    root, _ = parse_node(list(map(int, open("input.txt").readlines()[0].split())))
+    print((lambda a:lambda v:a(a,v))(lambda rec,node: sum(node.metadata) + sum([rec(rec,child) for child in node.children]))(root))
+    print((lambda a:lambda v:a(a,v))(lambda rec,node: sum([rec(rec, node.children[idx - 1]) for idx in node.metadata if idx and idx <= len(node.children)]) if node.children else sum(node.metadata))(root))
+'''
